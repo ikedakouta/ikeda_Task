@@ -19,7 +19,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('posts.index',['post' => $posts]);
+        return view('posts.index', compact('posts'));
+
     }
 
     /**
@@ -31,7 +32,7 @@ class PostController extends Controller
     //  新規作成のページを飛ばす
     public function create()
     {
-        return view('posts.create');   
+        return view('posts.create');
     }
 
     /**
@@ -45,15 +46,17 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $id = Auth::id();
-        // インスタンス作成
+        //インスタンス作成
         $post = new Post();
 
-        $post->body = $request->body;
-        $post->user_id = $id;
+        $post->id = $id;
+        $post->contents = $request->contents;
+        $post->user_name = $request->user_name;
 
-        $post->seve();
 
-        return redirect()->to('/posts');
+        $post->save();
+
+       return redirect()->to('/posts');
     }
 
     /**
@@ -64,8 +67,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $usr_id = $post->user_id;
-        $user = DB::table('users')->where('id',$usr_id)->first;
+        $usr_name = $post->user_name;
+        $user = DB::table('users')->where('id', $usr_name)->first();
+
 
         return view('posts.detail',['post' => $post,'user' => $user]);
 
@@ -77,12 +81,15 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
-        $post = Post::findOrFail('$id');
+        // $usr_id = $post->user_id;
+        $post = \App\Post::findOrFail($id);
 
-        return view('post.edit',['post' => $post]);
+        return view('posts.edit',['post' => $post]);
+        // return view('posts.edit');
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -91,17 +98,19 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request)
     {
-        $post = Post::findOrFail('$id');
+        $id = $request->post_id;
 
-        $post->body = $request->body;
+        //レコードを検索
+        $post = Post::findOrFail($id);
 
-        $post->seve();
+        $post->contents = $request->contents;
+
+        //保存（更新）
+        $post->save();
 
         return redirect()->to('/posts');
-
-
     }
 
     /**
@@ -110,11 +119,11 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        $post = Post::find('$id');
-
-        $post -> delete();
+        $post = \App\Post::find($id);
+        //削除
+        $post->delete();
 
         return redirect()->to('/posts');
     }
