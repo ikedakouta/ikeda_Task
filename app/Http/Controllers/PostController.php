@@ -16,10 +16,13 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $posts = Post::all();
         return view('posts.index', compact('posts'));
+
+         #キーワード受け取り
+
 
     }
 
@@ -85,7 +88,6 @@ class PostController extends Controller
     {
         // $usr_id = $post->user_id;
         $post = \App\Post::findOrFail($id);
-
         return view('posts.edit',['post' => $post]);
         // return view('posts.edit');
     }
@@ -105,7 +107,7 @@ class PostController extends Controller
         //レコードを検索
         $post = Post::findOrFail($id);
 
-        $post->contents = $request->contents;
+        $post->contents = $request->content;
 
         //保存（更新）
         $post->save();
@@ -127,4 +129,15 @@ class PostController extends Controller
 
         return redirect()->to('/posts');
     }
+
+    public function search(Request $request)
+    {
+        $request->search;
+        $posts = POST::where('contents','like',"%{$request->search}%")->paginate(5);
+
+          return view('posts.index',['posts' => $posts]);
+
+    }
+
+
 }

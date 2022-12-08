@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body">
                     <p class="card-text">{{ $post->contents }}</p>
-                    <div class="card-footer bg-transparent"><span class="font-weight-bold">by:</span> {{ $user->name }}</div>
+                    <div class="card-footer bg-transparent"><span class="font-weight-bold">by:</span> {{ $post->user_name }}</div>
                     @auth
                         <a href="{{ url('posts/edit/'.$post->id) }}" class="btn btn-dark">編集する</a>
                     @endauth

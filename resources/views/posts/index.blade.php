@@ -5,11 +5,17 @@
 <div class="container">
     <div class="row">
         <!-- メイン -->
+        <div class="create_btn">
+
+        </div>
 
         <div id="search">
-            <form action="list.php" method="post">
-                <input type="search" name="search" placeholder="ユーザー名で検索">
-                <button type="submit" name="submit" value="">🔍</button>
+            <form action="{{url('/posts/search')}}" method="POST" class="form-inline my-2 my-lg-0 ml-2">
+                {{csrf_field()}}
+                <div class="form-group">
+                <input type="search" class="form-control mr-sm-2" name="search"  value="{{request('search')}}" placeholder="キーワードを入力" aria-label="検索...">
+                </div>
+                <input type="submit" value="検索" class="btn btn-info">
             </form>
         </div>
         <div class="col-10 col-md-8 offset-1 offset-md-2">
@@ -28,7 +34,7 @@
 
 
                         <td>
-                            <a href="{{ url('posts/'.$post->id) }}" class="btn btn-success">編集</a>
+                            <a href="{{ url('posts/'.$post->id) }}" class="btn btn-success">詳細</a>
                          @auth
                             <form action="/posts/delete/{{$post->id}}" method="POST">
                                 {{ csrf_field() }}

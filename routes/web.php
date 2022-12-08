@@ -21,9 +21,10 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'PostController@index')->name('index');
+Route::post('/posts/search', 'PostController@search');
 
 Route::resource('/posts', 'PostController', ['only' => ['index','show', 'create', 'store']]);
-Route::get('posts/edit/{id}', 'PostController@edit');
+Route::get('posts/edit/{id}','PostController@edit');
 Route::post('posts/edit', 'PostController@update');
 Route::post('posts/delete/{id}', 'PostController@destroy');
