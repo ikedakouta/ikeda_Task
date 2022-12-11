@@ -8,12 +8,20 @@
             <form action="/posts" method="post">
                 @csrf
                 <div class="form-group">
-
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                     <label for="exampleFormControlTextarea1">名前</label>
-                    <input type="text" class="form-control" name="user_name" id="exampleFormControlTextarea1" rows="3">
+                    <input type="text" class="form-control" name="user_name" id="exampleFormControlTextarea1" rows="3" value="{{old('user_name')}}">
 
                     <label for="exampleFormControlTextarea1">新規投稿</label>
-                    <textarea class="form-control" name="contents" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea class="form-control" name="contents" id="exampleFormControlTextarea1" rows="3" >{{old('contents')}}</textarea>
                     <div class="text-center mt-3">
                         <input class="btn btn-primary" type="submit" value="投稿する">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">

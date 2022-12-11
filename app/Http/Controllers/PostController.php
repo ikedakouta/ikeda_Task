@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 class PostController extends Controller
 {
@@ -20,10 +20,6 @@ class PostController extends Controller
     {
         $posts = Post::all();
         return view('posts.index', compact('posts'));
-
-         #キーワード受け取り
-
-
     }
 
     /**
@@ -47,14 +43,27 @@ class PostController extends Controller
 
     // 新規登録されたものを データベースに反映
     public function store(Request $request)
+
     {
+        $inputs=$request->validate([
+            'user_name'=>'required|max:100',
+            'contents'=>'required|max:100'
+        ],
+    [
+        'user_name.required'=>'名前は必須です。',
+        'user_name.max:100'=>'名前が100文字を超えています。',
+        'contents.required'=>'投稿内容は必須です。',
+        'contents.max:100'=>'投稿内容が100文字を超えています',
+    ]);
+
+
         $id = Auth::id();
         //インスタンス作成
         $post = new Post();
 
         $post->id = $id;
-        $post->contents = $request->contents;
-        $post->user_name = $request->user_name;
+        $post->contents = $request->contents = $inputs['contents'];
+        $post->user_name = $request->user_name = $inputs['user_name'];
 
 
         $post->save();
@@ -86,6 +95,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+
         // $usr_id = $post->user_id;
         $post = \App\Post::findOrFail($id);
         return view('posts.edit',['post' => $post]);
@@ -102,12 +112,21 @@ class PostController extends Controller
      */
     public function update(Request $request)
     {
+        $inputs=$request->validate([
+            'contents'=>'required|max:100'
+        ],
+    [
+        'contents.required'=>'投稿内容は必須です。',
+        'contents.max:100'=>'投稿内容が100文字を超えています',
+    ]);
+
+
         $id = $request->post_id;
 
         //レコードを検索
         $post = Post::findOrFail($id);
 
-        $post->contents = $request->content;
+        $post->contents = $request->contents;
 
         //保存（更新）
         $post->save();
@@ -132,12 +151,17 @@ class PostController extends Controller
 
     public function search(Request $request)
     {
-        $request->search;
-        $posts = POST::where('contents','like',"%{$request->search}%")->paginate(5);
 
-          return view('posts.index',['posts' => $posts]);
+
+        $posts =  POST::where('contents','like',"%{$request->search}%")->paginate(5);
+
+            return view('posts.index',['posts' => $posts]);
 
     }
+
+
+
+
 
 
 }

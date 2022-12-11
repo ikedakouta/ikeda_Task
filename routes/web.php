@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'PostController@index')->name('index');
-Route::post('/posts/search', 'PostController@search');
+Route::get('/posts/search', 'PostController@search');
 
 Route::resource('/posts', 'PostController', ['only' => ['index','show', 'create', 'store']]);
 Route::get('posts/edit/{id}','PostController@edit');
