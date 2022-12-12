@@ -98,7 +98,7 @@ class PostController extends Controller
 
         // $usr_id = $post->user_id;
         $post = \App\Post::findOrFail($id);
-        return view('posts.edit',['post' => $post]);
+        return view('posts.edit',compact('posts'));
         // return view('posts.edit');
     }
 
@@ -155,7 +155,18 @@ class PostController extends Controller
 
         $posts =  POST::where('contents','like',"%{$request->search}%")->paginate(5);
 
+        return view('posts.index',compact('posts'));
+
+        if(empty($posts)){
+
             return view('posts.index',['posts' => $posts]);
+
+        }else{
+              $message = '検索結果なし';
+              return view('/posts.index',compact('message'));
+
+        }
+
 
     }
 
