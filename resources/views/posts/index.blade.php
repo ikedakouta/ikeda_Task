@@ -59,15 +59,14 @@
                                     @endauth
                                 </td>
                             </tr>
+                        @endforeach
                     </tbody>
                 </table>
+                @if (@empty($post))
+                    <p>検索結果は0件です。</p>
+                @endif
             </div>
-            @endforeach
-
         </div>
     </div>
 
-        @if(@empty($post))
-        <p>検索結果は0件です。</p>
-        @endif
 @endsection
