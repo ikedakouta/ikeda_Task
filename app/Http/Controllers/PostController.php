@@ -57,11 +57,9 @@ class PostController extends Controller
     ]);
 
 
-        $id = Auth::id();
         //インスタンス作成
         $post = new Post();
 
-        $post->id = $id;
         $post->contents = $request->contents = $inputs['contents'];
         $post->user_name = $request->user_name = $inputs['user_name'];
 
@@ -98,7 +96,7 @@ class PostController extends Controller
 
         // $usr_id = $post->user_id;
         $post = \App\Post::findOrFail($id);
-        return view('posts.edit',compact('posts'));
+        return view('posts.edit',compact('post'));
         // return view('posts.edit');
     }
 
